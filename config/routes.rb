@@ -1,5 +1,7 @@
-# Put your extension routes here.
+Rails.application.routes.draw do
+  # Add your extension routes here
 
-map.namespace :admin do |admin|
-  admin.resources :zip_code_ranges
+  namespace :admin do |admin|
+    resources :zip_code_ranges
+  end
 end

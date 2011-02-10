@@ -1,5 +1,5 @@
 class ZipCodeRange < ActiveRecord::Base
-  named_scope :order_by_name, :order => [:start_zip, :end_zip]
+  scope :order_by_name, :order => [:start_zip, :end_zip]
 
   has_one :zone_member, :as => :zoneable
   has_one :zone, :through => :zone_member
