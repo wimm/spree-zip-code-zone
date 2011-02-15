@@ -11,15 +11,16 @@ module SpreeBlankSkeleton
         Rails.env.production? ? require(c) : load(c)
       end
 
-      # This is mostly copied from the Spree 0.10.2 Zone methods,
-      # with added support for ZipCodeRange zone members
+      # Derived from Spree Core Zone model with ZipCodeRange support added
       Zone.class_eval do
         def kind
           member = self.members.last
           case member && member.zoneable_type
-          when "State"        then "state"
-          when "Zone"         then "zone"
+          when "State"  then "state"
+          when "Zone"   then "zone"
+            
           when "ZipCodeRange" then "zip_code_range"
+            
           else
             "country"
           end
@@ -29,7 +30,8 @@ module SpreeBlankSkeleton
         # between the start/end of a ZipCodeRange
         def include?(address)
           return false unless address
-  
+      
+          # NOTE: This is complicated by the fact that include? for HMP is broken in Rails 2.1 (so we use awkward index method)
           members.any? do |zone_member|
             case zone_member.zoneable_type
             when "Zone"
@@ -38,26 +40,28 @@ module SpreeBlankSkeleton
               zone_member.zoneable == address.country
             when "State"
               zone_member.zoneable == address.state
+
             when "ZipCodeRange"
               address.zipcode and address.zipcode.between?(
                 zone_member.zoneable.start_zip,
                 zone_member.zoneable.end_zip)
+                
             else
               false
             end
           end
-        end
+        end        
       end # Zone
   
       Admin::ZonesController.class_eval do
         def load_data
           @countries = Country.all.sort
           @states = State.all.sort
-          @zip_code_ranges = ZipCodeRange.all.sort
           @zones = Zone.all.sort
-        end  
-      end # Admin::ZonesController
 
+          @zip_code_ranges = ZipCodeRange.all.sort
+        end
+      end # Admin::ZonesController
     end
 
     config.to_prepare &method(:activate).to_proc
