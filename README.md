@@ -2,16 +2,23 @@ Zip Code Zone
 -------------
 
 This extension provides Zones based on ZIP code ranges to the Spree e-Commerce
-framework.  It was written for Spree 0.10.2, but might work with other versions
-as well.
+framework.
+
+Eric Pierce (https://github.com/wapcaplet) originally wrote it for Spree 0.10.2.
+Laurence A. Lee (https://github.com/rubyjedi) updated it for Spree 0.40.0 and Rails 3.
 
 
 Installation
 ------------
 
-To install, first grab the extension using Git:
+To install, add this gem to your Gemfile and install the gem as usual with bundler.
 
-    script/extension install git://github.com/wapcaplet/spree-zip-code-zone.git
+    $ bundle install
+
+If using Rails 3.0, run the extension's install rake task to copy over the database migration
+and updated JavaScript file. This will change with Rails 3.1.
+
+    $ rake spree_zip_code_zone:install
 
 Then migrate your database to add the necessary tables:
 
