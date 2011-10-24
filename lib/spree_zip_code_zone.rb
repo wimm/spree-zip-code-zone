@@ -1,5 +1,4 @@
 require 'spree_core'
-require 'spree_zip_code_zone_hooks'
 
 module SpreeBlankSkeleton
   class Engine < Rails::Engine
@@ -9,6 +8,11 @@ module SpreeBlankSkeleton
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), "../app/**/*_decorator*.rb")) do |c|
         Rails.env.production? ? require(c) : load(c)
+      end
+
+      #loads application's deface view overrides
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/overrides/*.rb")) do |c|
+        Rails.application.config.cache_classes ? require(c) : load(c)
       end
 
       # Derived from Spree Core Zone model with ZipCodeRange support added
